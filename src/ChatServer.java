@@ -31,6 +31,16 @@ public class ChatServer implements ServerInterface{
     }
 
     @Override
+    public boolean isRegistered(String name) throws RemoteException {
+        // TODO Auto-generated method stub
+        for (ClientInterface clientInterface : clientInterfaces) {
+            if(clientInterface.getName().equals(name))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
     public void register(ClientInterface client) throws RemoteException {
         // TODO Auto-generated method stub
         String text = client.getName() + " has join the chat";

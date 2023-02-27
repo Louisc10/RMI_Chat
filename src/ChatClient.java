@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ChatClient implements ClientInterface{
     private String name;
-
+    private static ServerInterface serverInterface;
     private static Scanner sc = new Scanner(System.in);
     
     public ChatClient(String name){
@@ -14,13 +14,21 @@ public class ChatClient implements ClientInterface{
 
     private static String welcome(){
         String name = "";
+        boolean isRegistered = true;
         System.out.println("Welcome to the My Chat Application");
         do {
             System.out.println("Please enter your name");
             name = sc.nextLine().trim();
             if(name.equals(""))
                 System.err.println("Please input your name");
-        } while (name.equals(""));
+            
+            try {
+                isRegistered = serverInterface.isRegistered(name);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } while (name.equals("") || isRegistered);
 
         return name;
     }
@@ -33,14 +41,14 @@ public class ChatClient implements ClientInterface{
 			}
 			
 			String host = args[0];
+			// Get remote object reference
+			Registry registry = LocateRegistry.getRegistry(host);
+			serverInterface = (ServerInterface) registry.lookup("ServerService");
 
 			String clientName = welcome();
 			ChatClient chatClient = new ChatClient(clientName);
 			UnicastRemoteObject.exportObject(chatClient, 0);
 
-			// Get remote object reference
-			Registry registry = LocateRegistry.getRegistry(host);
-			ServerInterface serverInterface = (ServerInterface) registry.lookup("ServerService");
             serverInterface.register(chatClient);
 
 			String s;
