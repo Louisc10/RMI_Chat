@@ -8,7 +8,7 @@ public class ChatServer implements ServerInterface{
     private static ArrayList<ClientInterface> clientInterfaces;
 
     public ChatServer(){
-        chats = new ArrayList<>();
+        chats = Utility.readFile(); 
         clientInterfaces = new ArrayList<>();
     }
 
@@ -73,6 +73,7 @@ public class ChatServer implements ServerInterface{
             for (ClientInterface clientInterface : clientInterfaces) {
                 clientInterface.publishMessage(text);
             }
+            Utility.writeFile(chats); 
         }
         else
             System.out.println("[!] Illegal message detected from " + client.getName());
