@@ -44,6 +44,10 @@ public class ChatServer implements ServerInterface{
     public void register(ClientInterface client) throws RemoteException {
         // TODO Auto-generated method stub
         String text = client.getName() + " has join the chat";
+        for (Chat chat : chats) {
+            text = "[" + chat.getAuthor() + "] " + chat.getMessage(); 
+            client.publishMessage(chat.getChat());
+        }
         for (ClientInterface clientInterface : clientInterfaces) {
             clientInterface.publishMessage(text);
         }
@@ -64,7 +68,7 @@ public class ChatServer implements ServerInterface{
     public void publishMessage(ClientInterface client, String message) throws RemoteException {
         // TODO Auto-generated method stub
         if(clientInterfaces.contains(client)){
-            String text = "[" + client.getName() + "]" + message; 
+            String text = "[" + client.getName() + "] " + message; 
             chats.add(new Chat(client.getName(), message));
             for (ClientInterface clientInterface : clientInterfaces) {
                 clientInterface.publishMessage(text);
