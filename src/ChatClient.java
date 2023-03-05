@@ -20,11 +20,13 @@ public class ChatClient implements ClientInterface{
             System.out.println("Please enter your name");
             name = sc.nextLine().trim();
             if(name.equals(""))
-                System.err.println("Please input your name");
-            
-            try {
-                isRegistered = serverInterface.isRegistered(name);
-            } catch (RemoteException e) {
+                System.err.println("[!] Please input your name");
+                
+                try {
+                    isRegistered = serverInterface.isRegistered(name);
+                    if(isRegistered)
+                        System.err.println("[!] That name has been used");
+                } catch (RemoteException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
